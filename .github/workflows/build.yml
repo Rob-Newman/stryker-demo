@@ -65,14 +65,8 @@ jobs:
         run: Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md >> $env:GITHUB_STEP_SUMMARY
         
       - name: Post Stryker report as PR comment
-        uses: actions/github-script@v5
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-           github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: '#Hello World'
-              })
+          filePath: src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
+          comment_tag: stryker-results
         if: github.event_name == 'pull_request'
