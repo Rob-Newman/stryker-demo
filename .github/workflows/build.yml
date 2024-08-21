@@ -58,11 +58,52 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: ${{ github.workspace }}/**/mutation-report.html
+          path: src/StrykerDemo.Tests/StrykerOutput/**/reports/mutation-report.html
           retention-days: 5
 
       - name: Find Stryker Markdown files recursively
         id: find-md-files
         run: |
-          md_files=$(find ./TestYourTest/UnitTests -name "*.md")
+          md_files=$(find ./src/UnitTests -name "*.md")
           echo "::set-output name=md_files::${md_files}"
+
+      - name: Add Stryker report to Job Summary
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const mdFiles = "${{ steps.find-md-files.outputs.md_files }}".split("\n");
+
+            let reportContent = "";
+            mdFiles.forEach(file => {
+              reportContent += fs.readFileSync(file, 'utf8') + '\n';
+            });
+          
+            SUMMARY=$'# Testing Job Summary\n## Second Level Heading\nHello GitHub'
+            echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+        
+      - name: Post Stryker report as PR comment
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const mdFiles = "${{ steps.find-md-files.outputs.md_files }}".split("\n");
+
+            let reportContent = "";
+            mdFiles.forEach(file => {
+              reportContent += fs.readFileSync(file, 'utf8') + '\n';
+            });
+          
+            github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: reportContent
+              })
+        if: github.event_name == 'pull_request'
