@@ -62,7 +62,7 @@ jobs:
           retention-days: 5
 
       - name: Add Stryker report to Job Summary
-        run: echo ‘### Hello world! :rocket:’ >> $env:GITHUB_STEP_SUMMARY
+        run: Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md >> $env:GITHUB_STEP_SUMMARY
         
       - name: Post Stryker report as PR comment
         uses: actions/github-script@v5
