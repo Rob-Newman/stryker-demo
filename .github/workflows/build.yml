@@ -64,7 +64,7 @@ jobs:
       - name: Find Stryker Markdown files recursively
         id: find-md-files
         run: |
-          md_files=$(find ./src/UnitTests -name "*.md")
+          md_files=$(find ./src/StrykerDemo.Tests -name "*.md")
           echo "::set-output name=md_files::${md_files}"
 
       - name: Add Stryker report to Job Summary
