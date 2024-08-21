@@ -45,3 +45,11 @@ jobs:
         with:
           files: |
             **\test-result.xml
+
+      - name: Install dotnet tools
+        working-directory: src
+        run: dotnet tool restore
+    
+      - name: Run Stryker.NET
+        working-directory: src/StrykerDemo.Tests
+        run: dotnet stryker --reporter "markdown" --reporter "html" --reporter "progress"
