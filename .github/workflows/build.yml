@@ -36,7 +36,7 @@ jobs:
         working-directory: src
         
       - name: Test
-        run: dotnet test -c Release
+        run: dotnet test -c Release --logger:nunit
         working-directory: src
 
       - name: Publish Test Results
