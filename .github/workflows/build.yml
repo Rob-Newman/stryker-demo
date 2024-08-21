@@ -35,15 +35,15 @@ jobs:
         run: dotnet build -c Release --no-restore
         working-directory: src
         
-      - name: Test
-        run: dotnet test -c Release --logger:nunit
+      - name: Run Unit Tests
+        run: dotnet test -c Release --logger:"nunit;LogFilePath=test-result.xml"
         working-directory: src
 
-      - name: Publish Test Results
+      - name: Publish Unit Tests Results
         uses: EnricoMi/publish-unit-test-result-action/windows@v2
         if: always()
         with:
           files: |
-            testresults\**\*.xml
-            testresults\**\*.trx
-            testresults\**\*.json
+            test-result\**\*.xml
+            test-result\**\*.trx
+            test-result\**\*.json
