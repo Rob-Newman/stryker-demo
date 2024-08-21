@@ -53,3 +53,16 @@ jobs:
       - name: Run Stryker.NET
         working-directory: src/StrykerDemo.Tests
         run: dotnet stryker --reporter "markdown" --reporter "html" --reporter "progress"
+
+      - name: Upload Stryker Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ${{ github.workspace }}/**/mutation-report.html
+          retention-days: 5
+
+      - name: Find Stryker Markdown files recursively
+        id: find-md-files
+        run: |
+          md_files=$(find ./TestYourTest/UnitTests -name "*.md")
+          echo "::set-output name=md_files::${md_files}"
