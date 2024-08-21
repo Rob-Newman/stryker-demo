@@ -69,20 +69,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
-            const path = require('path');
-
-            const mdFiles = "${{ steps.find-md-files.outputs.md_files }}".split("\n");
-
-            let reportContent = "";
-            mdFiles.forEach(file => {
-              reportContent += fs.readFileSync(file, 'utf8') + '\n';
-            });
-          
             github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: reportContent
+                body: Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
               })
         if: github.event_name == 'pull_request'
