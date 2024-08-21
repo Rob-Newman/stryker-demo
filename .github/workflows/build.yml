@@ -38,3 +38,12 @@ jobs:
       - name: Test
         run: dotnet test -c Release
         working-directory: src
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        if: always()
+        with:
+          files: |
+            test-results\**\*.xml
+            test-results\**\*.trx
+            test-results\**\*.json
