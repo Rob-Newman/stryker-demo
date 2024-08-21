@@ -69,12 +69,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-           let reportContent = fs.readFileSync('src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md', 'utf8');
-          
-            github.rest.issues.createComment({
+           github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: reportContent
+                body: '#Hello World'
               })
         if: github.event_name == 'pull_request'
