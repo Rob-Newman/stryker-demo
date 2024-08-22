@@ -12,7 +12,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Project name to pack and publish
   PROJECT_NAME: StrykerDemo
-  # Stryker Markdoen file
+  # Stryker Markdown
   STRYKER_REPORT: none
 jobs:
   build:
@@ -67,7 +67,8 @@ jobs:
         run: |
           $location = Get-ChildItem src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
           Get-Content $location.FullName >> $env:STRYKER_REPORT
-          $env:STRYKER_REPORT >> $env:GITHUB_STEP_SUMMARY
+          Get-Content $location.FullName >> $env:GITHUB_STEP_SUMMARY
+          echo $env:STRYKER_REPORT
         
       - name: Post Stryker report as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
