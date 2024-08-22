@@ -73,5 +73,5 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: | 
-            ${{ env.$env:STRYKER_REPORT }}
+            ${{ $env:STRYKER_REPORT }}
         if: github.event_name == 'pull_request'
