@@ -12,6 +12,8 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Project name to pack and publish
   PROJECT_NAME: StrykerDemo
+  # Stryker Markdoen file
+  STRYKER_FILE: none
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -62,11 +64,14 @@ jobs:
           retention-days: 5
 
       - name: Add Stryker report to Job Summary
-        run: Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md >> $env:GITHUB_STEP_SUMMARY
+        run: |
+          $location = Get-ChildItem src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
+          Get-Content $location.FullName >> $env:GITHUB_STEP_SUMMARY
+          $location.FullName >> $env:STRYKER_FILE
         
       - name: Post Stryker report as PR comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          filePath: src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
+          filePath: $STRYKER_FILE
           comment_tag: stryker-results
         if: github.event_name == 'pull_request'
