@@ -72,6 +72,5 @@ jobs:
       - name: Post Stryker report as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          message: | 
-            ${{ $env:STRYKER_REPORT }}
+          message: ${{ $env:STRYKER_REPORT }}
         if: github.event_name == 'pull_request'
