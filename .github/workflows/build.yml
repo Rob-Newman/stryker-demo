@@ -65,7 +65,7 @@ jobs:
         run: | 
           $content = Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
           $content >> $env:STRYKER_REPORT
-          echo ("STRYKER_REPORT=" + $content) >> $env:GITHUB_ENV
+          echo ("STRYKER_REPORT=" + $content) | Out-File -FilePath $env:GITHUB_ENV -Append
         
       - name: Post Stryker report as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
