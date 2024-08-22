@@ -12,8 +12,6 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Project name to pack and publish
   PROJECT_NAME: StrykerDemo
-  # Stryker Markdown
-  STRYKER_REPORT: none
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -64,15 +62,14 @@ jobs:
           retention-days: 5
 
       - name: Add Stryker report to Job Summary
-        run: |
-          $location = Get-ChildItem src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
-          Get-Content $location.FullName >> $env:STRYKER_REPORT
-          Get-Content $location.FullName >> $env:GITHUB_STEP_SUMMARY
-          echo $env:STRYKER_REPORT
+        run: | 
+          $content = Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
+          $content >> $env:STRYKER_REPORT
+          echo ("STRYKER_REPORT=" + $content) >> $env:GITHUB_ENV
         
       - name: Post Stryker report as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
-            $env:STRYKER_REPORT
+            "${{ $env:STRYKER_REPORT }}"
         if: github.event_name == 'pull_request'
