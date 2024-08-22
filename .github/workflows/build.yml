@@ -13,7 +13,7 @@ env:
   # Project name to pack and publish
   PROJECT_NAME: StrykerDemo
   # Stryker Markdoen file
-  STRYKER_FILE: none
+  STRYKER_REPORT: none
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -66,11 +66,12 @@ jobs:
       - name: Add Stryker report to Job Summary
         run: |
           $location = Get-ChildItem src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
-          Get-Content $location.FullName >> $env:GITHUB_STEP_SUMMARY
-          $location.FullName >> $env:STRYKER_FILE
+          Get-Content $location.FullName >> $env:STRYKER_REPORT
+          $env:STRYKER_REPORT >> $env:GITHUB_STEP_SUMMARY
         
       - name: Post Stryker report as PR comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: ${{ env.STRYKER_FILE }}
+          message: | 
+            ${{ env.$env:STRYKER_REPORT}}
         if: github.event_name == 'pull_request'
