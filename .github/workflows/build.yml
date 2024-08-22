@@ -70,8 +70,7 @@ jobs:
           $location.FullName >> $env:STRYKER_FILE
         
       - name: Post Stryker report as PR comment
-        uses: thollander/actions-comment-pull-request@v2
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          filePath: $env:STRYKER_FILE
-          comment_tag: stryker-results
+          path: ${{ env.STRYKER_FILE }}
         if: github.event_name == 'pull_request'
