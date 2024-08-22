@@ -64,7 +64,7 @@ jobs:
       - name: Add Stryker report to Job Summary
         run: | 
           $content = Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
-          Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md >> $env:STRYKER_REPORT
+          $content >> $env:GITHUB_STEP_SUMMARY
           echo ("STRYKER_REPORT=" + $content) | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Debug
