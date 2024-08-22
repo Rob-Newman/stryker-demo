@@ -64,11 +64,15 @@ jobs:
       - name: Add Stryker report to Job Summary
         run: | 
           $content = Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
-          $content >> $env:STRYKER_REPORT
+          Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md >> $env:STRYKER_REPORT
           echo ("STRYKER_REPORT=" + $content) | Out-File -FilePath $env:GITHUB_ENV -Append
-        
-      - name: Post Stryker report as PR comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
-        if: github.event_name == 'pull_request'
+
+      - name: Debug
+        run: | 
+           echo $STRYKER_REPORT
+          
+      #- name: Post Stryker report as PR comment
+      #  uses: marocchino/sticky-pull-request-comment@v2
+      #  with:
+      #    message: `
+      #  if: github.event_name == 'pull_request'
