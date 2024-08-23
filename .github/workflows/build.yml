@@ -70,6 +70,13 @@ jobs:
       - name: Debug
         run: | 
            echo $STRYKER_REPORT
+
+      - name: Find Markdown files recursively
+        id: find-md-files
+        run: |
+          md_files=$(find ./src/StrykerDemo.Tests -name "*.md")
+          echo "::set-output name=md_files::${md_files}"
+        shell: bash
           
       - name: Post Stryker report as comment
         uses: actions/github-script@v5
