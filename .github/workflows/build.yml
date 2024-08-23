@@ -63,9 +63,9 @@ jobs:
 
       - name: Add Stryker report to Job Summary
         run: | 
-          $content = Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md
-          $content >> $env:GITHUB_STEP_SUMMARY
-          echo ("STRYKER_REPORT=" + $content) | Out-File -FilePath $env:GITHUB_ENV -Append
+          Get-Content src/StrykerDemo.Tests/StrykerOutput/*/reports/mutation-report.md >> $env:GITHUB_STEP_SUMMARY
+          $location = Get-ChildItem src/StrykerOutput/*/reports/mutation-report.md
+          echo ("STRYKER_REPORT=" + $location.FullName) | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Debug
         run: | 
@@ -76,11 +76,13 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            
+            const mdFile = "${{ env.STRYKER_REPORT }}";
+            let reportContent = fs.readFileSync(mdFile, 'utf8');
+
             github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: $env.STRYKER_REPORT
+                body: reportContent
             })
         if: github.event_name == 'pull_request'
