@@ -76,7 +76,7 @@ jobs:
         run: |
           md_files=$(find ./src/StrykerDemo.Tests -name "*.md")
           echo "::set-output name=md_files::${md_files}"
-          echo ${md_files}
+          echo "STRYKER_FILES=$md_files" >> $GITHUB_ENV
         shell: bash
           
       - name: Post Stryker report as comment
@@ -86,8 +86,12 @@ jobs:
           script: |
             const fs = require('fs');
             
-            const mdFile = "${{ env.STRYKER_REPORT }}";
-            let reportContent = fs.readFileSync(mdFile, 'utf8');
+            const mdFiles = "${{ env.STRYKER_FILES }}".split("\n");
+
+            let reportContent = "";
+            mdFiles.forEach(file => {
+              reportContent += fs.readFileSync(file, 'utf8') + '\n';
+            });
 
             github.rest.issues.createComment({
                 issue_number: context.issue.number,
