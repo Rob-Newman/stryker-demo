@@ -76,7 +76,7 @@ jobs:
         run: |
           md_files=$(find ./src/StrykerDemo.Tests -name "*.md")
           echo "::set-output name=md_files::${md_files}"
-          echo md_files
+          echo ${md_files}
         shell: bash
           
       - name: Post Stryker report as comment
